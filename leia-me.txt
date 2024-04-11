@@ -1,0 +1,3 @@
+1 - Instale o python (versões compativeis na pasta "outros aplicativos")
+2 - Abra o CMD  e execute os comandos "pip install requests", sem as aspas.
+3 - Após isso é só executar o arquivo e informar o numero do municipio!
