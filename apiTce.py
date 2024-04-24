@@ -3,8 +3,19 @@ import os
 from pathlib import Path
 print("Informe o numero do municipio: ")
 codigoDoMunicipio = str(input())
-rContratos = requests.get('https://api-dados-abertos.tce.ce.gov.br/contrato?codigo_municipio=' + codigoDoMunicipio + '&data_contrato=2010-01-01_2023-12-31&quantidade=0&deslocamento=0')
-rLicitacao = requests.get('https://api-dados-abertos.tce.ce.gov.br/licitacoes?codigo_municipio=' + codigoDoMunicipio + '&data_realizacao_autuacao_licitacao=2010-01-01_2023-12-31')
+try:
+    rContratos = requests.get('https://api-dados-abertos.tce.ce.gov.br/contrato?codigo_municipio=' + codigoDoMunicipio + '&data_contrato=2010-01-01_2023-12-31&quantidade=0&deslocamento=0')
+    rLicitacao = requests.get('https://api-dados-abertos.tce.ce.gov.br/licitacoes?codigo_municipio=' + codigoDoMunicipio + '&data_realizacao_autuacao_licitacao=2010-01-01_2023-12-31')
+except:
+    print("Tentando conexao com API TCE...")
+    try:
+        rContratos = requests.get('https://api-dados-abertos.tce.ce.gov.br/contrato?codigo_municipio=' + codigoDoMunicipio + '&data_contrato=2010-01-01_2023-12-31&quantidade=0&deslocamento=0')
+        rLicitacao = requests.get('https://api-dados-abertos.tce.ce.gov.br/licitacoes?codigo_municipio=' + codigoDoMunicipio + '&data_realizacao_autuacao_licitacao=2010-01-01_2023-12-31')
+    except:
+        print("Não foi possivel conectar-se a API.")
+        os.system("PAUSE")
+        quit()
+        
 listaDeLicitacoesTxt = []
 listaDeContratosTxt = []
 
@@ -18,7 +29,7 @@ def licitacao():
         listaDeLicitacoesTxt.append(licitacao['numero_licitacao'])
         print("Licitacao: " + listaDeLicitacoesTxt[x])
 
-    listagemDeLicitacoes = Path("C:/Users/Supor/Desktop/licitacoes.txt")
+    listagemDeLicitacoes = Path("C:/Users/Supor/Desktop/" + codigoDoMunicipio + "-licitacoes.txt")
     listagemDeLicitacoes.write_text("\n".join(listaDeLicitacoesTxt))
 
 
@@ -32,7 +43,7 @@ def contrato():
         listaDeContratosTxt.append(contratos['numero_contrato'])
         print("Contrato: " + listaDeContratosTxt[x])
 
-    listagemDeContratos = Path("C:/Users/Supor/Desktop/contratos.txt")
+    listagemDeContratos = Path("C:/Users/Supor/Desktop/" + codigoDoMunicipio + "-contratos.txt")
     listagemDeContratos.write_text("\n".join(listaDeContratosTxt))
 
 licitacao()
